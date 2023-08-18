@@ -10,13 +10,10 @@ class User < ApplicationRecord
 
   class << self
     def classmates(user)
-      classmate_ids = Enrollment
-                    .where(program_id: user.program_ids)
-                    .where
-                    .not(user: user )
-                    .map(&:user_id)
-
-      User.where(id: classmate_ids)
+      left_outer_joins(enrollments: :program)
+      .where("programs.id IN (?) ", user.programs.ids)
+      .where.not("users.id = ?", user.id)
+      .uniq
     end
   end
 end
