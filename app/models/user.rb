@@ -8,6 +8,9 @@ class User < ApplicationRecord
   ## scopes
   scope :favorites, ->{ left_outer_joins(:enrollments).where("enrollments.favorite = ?",  true) }
 
+  ## enums
+  enum :kind, ['student', 'teacher', 'student_teacher']
+  
   class << self
     def classmates(user)
       left_outer_joins(enrollments: :program)
