@@ -5,6 +5,9 @@ class User < ApplicationRecord
   has_many :teachers, through: :enrollments
   has_many :programs, through: :enrollments
 
+  ## scopes
+  scope :favorites, ->{ left_outer_joins(:enrollments).where("enrollments.favorite = ?",  true) }
+
   class << self
     def classmates(user)
       classmate_ids = Enrollment
