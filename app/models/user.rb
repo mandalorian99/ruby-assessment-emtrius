@@ -1,7 +1,10 @@
+require 'validators/switch_role_validator'
+
 class User < ApplicationRecord
 
   ## Associations
   has_many :enrollments
+  has_many :teacher_enrollments, class_name: 'Enrollment', foreign_key: :teacher_id
   has_many :teachers, through: :enrollments
   has_many :programs, through: :enrollments
 
@@ -10,7 +13,10 @@ class User < ApplicationRecord
 
   ## enums
   enum :kind, ['student', 'teacher', 'student_teacher']
-  
+
+  ## Validations
+  validates_with SwitchRoleValidator, on: :update
+
   class << self
     def classmates(user)
       left_outer_joins(enrollments: :program)
